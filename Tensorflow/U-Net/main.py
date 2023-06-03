@@ -100,3 +100,7 @@ model = Model(inputs=input_layer, outputs=final_activation)
 model.compile(optimizer=Adam(learning_rate=0.00001), loss='categorical_crossentropy', metrics=['categorical_accuracy'])
 
 model.summary()
+
+
+
+

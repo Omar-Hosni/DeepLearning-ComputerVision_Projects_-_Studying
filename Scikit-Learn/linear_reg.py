@@ -1,5 +1,5 @@
 from sklearn import datasets
-from sklearn import linear_model
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
@@ -14,7 +14,7 @@ y = california.target
 print(X.shape)
 print(y.shape)
 
-l_reg = linear_model.LinearRegression()
+l_reg = LinearRegression()
 
 plt.scatter(X.T[4], y)
 plt.show()
