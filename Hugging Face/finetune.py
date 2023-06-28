@@ -78,4 +78,31 @@ trainer = Trainer(
 
 trainer.train()
 
+#native pytorch
 
+from torch.utils.data import DataLoader
+from transformers import AdamW
+
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+
+model = DistilBertForSequenceClassification.from_pretrained('distilbert-base-uncased')
+model.to(device)
+model.train()
+
+train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+
+optim = AdamW(model.parameters(), lr=5e-5)
+
+num_train_epochs = 2
+for epoch in range(num_train_epochs):
+    for batch in train_loader:
+        optim.zero_grad()
+        input_ids = batch['input_ids'].to(device)
+        attention_mask = batch['attention_mask'].to(device)
+        labels = batch['labels'].to(device)
+        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+        loss = outputs[0]
+        loss.backward()
+        optim.step()
+
+model.eval()
