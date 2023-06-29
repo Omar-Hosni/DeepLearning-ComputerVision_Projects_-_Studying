@@ -33,7 +33,8 @@ training_args = TrainingArguments(
     save_steps=1000,
     logging_steps=100,
     fp16=True,
-    fp16_opt_level="02"
+    fp16_opt_level="02",
+    learning_rate=1e-4
 )
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
