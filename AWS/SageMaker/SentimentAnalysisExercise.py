@@ -22,7 +22,7 @@ words = all_text.split()
 from collections import Counter
 
 #build a dictionary that maps a words to integers
-counts = Counter(words)
+counts = Counter(words) #Counter() returns a dictionary that maps characters to its frequency
 vocab = sorted(counts, key=counts.get, reverse=True)
 vocab_to_int = {word: ii for ii, word in enumerate(vocab, 1)}
 

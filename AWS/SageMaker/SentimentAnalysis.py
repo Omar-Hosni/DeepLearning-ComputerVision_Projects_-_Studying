@@ -207,9 +207,9 @@ session = sagemaker.Session() # Store the current SageMaker session
 # S3 prefix (which folder will we use)
 prefix = 'sentiment-xgboost'
 
+train_location = session.upload_data(os.path.join(data_dir, 'train.csv'), key_prefix=prefix)
 test_location = session.upload_data(os.path.join(data_dir, 'test.csv'), key_prefix=prefix)
 val_location = session.upload_data(os.path.join(data_dir, 'validation.csv'), key_prefix=prefix)
-train_location = session.upload_data(os.path.join(data_dir, 'train.csv'), key_prefix=prefix)
 
 
 
