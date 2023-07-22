@@ -3,8 +3,8 @@ from transformers import pipeline, BloomTokenizerFast, BloomForCausalLM, TextDat
 from transformers import AutoModelForCausalLM, AutoTokenizer, TextDataset, DataCollatorForLanguageModeling, Trainer, TrainingArguments
 from sklearn.model_selection import GridSearchCV
 
-data_dir = 'combined_data/combined.txt'
-eval_dir = 'validation_data/valid.txt'
+data_dir = '../combined_data/combined.txt'
+eval_dir = '../validation_data/valid.txt'
 
 tokenizer = AutoTokenizer.from_pretrained('Naseej/noon-7b')
 model = AutoModelForCausalLM.from_pretrained('Naseej/noon-7b')
