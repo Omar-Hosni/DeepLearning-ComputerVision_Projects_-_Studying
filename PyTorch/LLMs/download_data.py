@@ -8,13 +8,17 @@ combined_data_dir = 'D:\Projects\ML projects\Scikit-Learn\PyTorch\LLMs\combined_
 
 
 
-def download_url(url):
+def download_and_save_url(offset, url):
+
     response = requests.get(url)
     if response.status_code == 200:
-        return response.text
+        content = response.text
+        local_filename = os.path.join(data_dir, f'data{offset}.txt')
+        with open(local_filename, 'w', encoding='utf-8') as file:
+            file.write(content)
+        print("Download successful. Content saved as", local_filename)
     else:
-        return None
-
+        print("Error occurred while downloading content for URL", url)
 
 def read_all_data_and_combine_them(data_dir, output_dir):
     with open(output_dir, 'w', encoding='utf-8') as outfile:
@@ -25,29 +29,21 @@ def read_all_data_and_combine_them(data_dir, output_dir):
                     outfile.write(infile.read())
 
 if __name__ == '__main__':
-    urls = []
-    for i in range(11):
-        url = f"https://datasets-server.huggingface.co/rows?dataset=SaiedAlshahrani%2FEgyptian_Arabic_Wikipedia_20230101&config=SaiedAlshahrani--Egyptian_Arabic_Wikipedia_20230101&split=train&offset={i}&limit=100"
-        urls.append(url)
+    import os
+    from concurrent.futures import ProcessPoolExecutor
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
 
-    if not os.path.exists('arabic_egyptian'):
-        os.makedirs('arabic_egyptian')
+    urls = [
+        f"https://datasets-server.huggingface.co/rows?dataset=SaiedAlshahrani%2F" \
+        f"Egyptian_Arabic_Wikipedia_20230101&" \
+        f"config=default&split=train&offset={i}&limit=100"
+        for i in range(100)
+    ]
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
-        futures = []
-        for i, url in enumerate(urls):
-            future = executor.submit(download_url, url)
-            futures.append((i, future))
+    with ProcessPoolExecutor(max_workers=os.cpu_count()) as executor:
+        # Use map to apply download_and_save_url to each URL and offset
+        futures = executor.map(download_and_save_url, range(len(urls)), urls)
 
-        for i, future in futures:
-            result = future.result()
-            if result is not None:
-                local_filename = f"{data_dir}/data{i}.txt"
-                with open(local_filename, 'w', encoding='utf-8') as file:
-                    file.write(result)
-                print("Download successful. Content saved as", local_filename)
-            else:
-                print("Error occurred while downloading content for URL", urls[i])
-
+    # Combine data
     read_all_data_and_combine_them(data_dir, combined_data_dir)
-
